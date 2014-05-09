@@ -35,7 +35,7 @@ my $MOSH_VERSION = '1.2.4a';
 use warnings;
 use strict;
 use Getopt::Long;
-use IO::Socket;
+use IO::Socket::IP;
 
 $|=1;
 
@@ -181,8 +181,8 @@ if ( defined $fake_proxy ) {
 
   # Resolve hostname and connect
   my $afstr = 'AF_' . uc( $family );
-  my $af = eval { IO::Socket->$afstr } or die "$0: Invalid family $family\n";
-  my $sock = IO::Socket->new( Domain => $af,
+  my $af = eval { IO::Socket::IP->$afstr } or die "$0: Invalid family $family\n";
+  my $sock = IO::Socket::IP->new( Domain => $af,
 			      Family => $af,
 			      PeerHost => $host,
 			      PeerPort => $port,
