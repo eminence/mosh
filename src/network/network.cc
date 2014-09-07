@@ -155,6 +155,24 @@ Connection::Socket::Socket( int family )
   if ( _fd < 0 ) {
     throw NetworkException( "socket", errno );
   }
+  char* client_local_port = getenv("MOSH_CLIENT_PORT_BIND");
+  if (client_local_port) {
+	int _local_port = atoi(client_local_port);
+
+	struct sockaddr_in _addr;
+	memset(&_addr, 0, sizeof(struct sockaddr_in));
+	_addr.sin_family = AF_INET;
+	_addr.sin_port = htons(_local_port);
+	const size_t local_addr_len = sizeof(struct sockaddr_in);
+
+	if ( bind( _fd, (const sockaddr*)&_addr, local_addr_len ) == 0 ) {
+		fprintf(stderr, "client OK bound to %d\n", _local_port);
+	} else {
+		fprintf(stderr, "client ERR bound to %d\n", _local_port);
+		perror("client_bind");
+	}
+
+  }
 
   /* Disable path MTU discovery */
 #ifdef HAVE_IP_MTU_DISCOVER
@@ -315,6 +333,7 @@ bool Connection::try_bind( const char *addr, int port_low, int port_high )
     }
 
     if ( bind( sock(), &local_addr.sa, local_addr_len ) == 0 ) {
+      fprintf(stderr, "--- BOUND to %d\n", i);
       return true;
     } else if ( i == search_high ) { /* last port to search */
       int saved_errno = errno;
@@ -407,13 +426,13 @@ void Connection::send( string s )
   uint64_t now = timestamp();
   if ( server ) {
     if ( now - last_heard > SERVER_ASSOCIATION_TIMEOUT ) {
-      has_remote_addr = false;
-      fprintf( stderr, "Server now detached from client.\n" );
+      //has_remote_addr = false;
+      //fprintf( stderr, "Server now detached from client.\n" );
     }
   } else { /* client */
     if ( ( now - last_port_choice > PORT_HOP_INTERVAL )
 	 && ( now - last_roundtrip_success > PORT_HOP_INTERVAL ) ) {
-      hop_port();
+      //hop_port();
     }
   }
 }
