@@ -187,7 +187,7 @@ int main( int argc, char *argv[] )
   }
 
   /* Adopt native locale */
-  set_native_locale();
+  set_native_locale("mosh-client");
 
   bool success = false;
   try {

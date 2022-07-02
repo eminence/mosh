@@ -90,16 +90,20 @@ bool is_utf8_locale( void ) {
   return true;
 }
 
-void set_native_locale( void ) {
+void set_native_locale( const char* where ) {
   /* Adopt native locale */
   if ( NULL == setlocale( LC_ALL, "" ) ) {
     int saved_errno = errno;
     if ( saved_errno == ENOENT ) {
       LocaleVar ctype( get_ctype() );
-      fprintf( stderr, "The locale requested by %s isn't available here.\n", ctype.str().c_str() );
+      if ( where ) {
+        fprintf( stderr, "The locale requested by %s isn't available here (%s).\n", ctype.str().c_str(), where );
+      } else {
+        fprintf( stderr, "The locale requested by %s isn't available here.\n", ctype.str().c_str() );
+      }
       if ( !ctype.name.empty() ) {
-	fprintf( stderr, "Running `locale-gen %s' may be necessary.\n\n",
-		 ctype.value.c_str() );
+        fprintf( stderr, "Running `locale-gen %s' may be necessary.\n\n",
+            ctype.value.c_str() );
       }
     } else {
       errno = saved_errno;

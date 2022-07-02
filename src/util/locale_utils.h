@@ -47,7 +47,7 @@ class LocaleVar {
 const LocaleVar get_ctype( void );
 const char *locale_charset( void );
 bool is_utf8_locale( void );
-void set_native_locale( void );
+void set_native_locale( const char* where = NULL );
 void clear_locale_variables( void );
 
 #endif

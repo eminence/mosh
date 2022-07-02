@@ -328,7 +328,7 @@ int main( int argc, char *argv[] )
   }
 
   /* Adopt implementation locale */
-  set_native_locale();
+  set_native_locale("mosh-server");
   if ( !is_utf8_locale() ) {
     /* save details for diagnostic */
     LocaleVar native_ctype = get_ctype();
@@ -347,7 +347,7 @@ int main( int argc, char *argv[] )
     }
 
     /* check again */
-    set_native_locale();
+    set_native_locale("mosh-server");
     if ( !is_utf8_locale() ) {
       LocaleVar client_ctype = get_ctype();
       string client_charset( locale_charset() );
