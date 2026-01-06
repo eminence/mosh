@@ -368,16 +368,12 @@ void Connection::set_remote_addr( const struct sockaddr* addr, socklen_t len )
 {
   fatal_assert( len <= sizeof( remote_addr ) );
 
-  bool family_changed = ( remote_addr.sa.sa_family != addr->sa_family );
-
   remote_addr_len = len;
   memcpy( &remote_addr.sa, addr, remote_addr_len );
 
   has_remote_addr = true;
 
-  if ( family_changed ) {
-    socks.push_back( Socket( remote_addr.sa.sa_family ) );
-  }
+  socks.push_back( Socket( remote_addr.sa.sa_family ) );
 
   set_MTU( remote_addr.sa.sa_family );
 }
